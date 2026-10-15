@@ -1,0 +1,127 @@
+{
+  "version": 3,
+  "note": "P0 内置模板库。云端可下发同名文件覆盖（写入 filesDir/templates.json）以实现热更新；银行改文案时无需重新发版。",
+  "packageChannels": {
+    "com.tencent.mm": "微信支付",
+    "com.eg.android.AlipayGphone": "支付宝",
+    "com.unionpay": "云闪付",
+    "com.unionpay.mobilepay": "云闪付"
+  },
+  "senderChannels": {
+    "95588": "工商银行",
+    "95533": "建设银行",
+    "95599": "农业银行",
+    "95566": "中国银行",
+    "95555": "招商银行",
+    "95559": "交通银行",
+    "95580": "邮储银行",
+    "95561": "兴业银行",
+    "95528": "浦发银行",
+    "95568": "民生银行",
+    "95558": "中信银行",
+    "95595": "光大银行",
+    "95511": "平安银行",
+    "95508": "广发银行",
+    "95577": "华夏银行"
+  },
+  "directionMap": {
+    "支出": "expense",
+    "消费": "expense",
+    "扣款": "expense",
+    "转出": "expense",
+    "取现": "expense",
+    "代扣": "expense",
+    "已支付": "expense",
+    "支付成功": "expense",
+    "付款成功": "expense",
+    "已付款": "expense",
+    "成功付款": "expense",
+    "已成功付款": "expense",
+    "收入": "income",
+    "存入": "income",
+    "转入": "income",
+    "入账": "income",
+    "工资": "income",
+    "收款到账": "income",
+    "已收款": "income",
+    "已收钱": "income",
+    "退款": "refund",
+    "退货": "refund",
+    "已退款": "refund",
+    "退款成功": "refund",
+    "退款到账": "refund"
+  },
+  "templates": [
+    {
+      "id": "bank-tail-flow",
+      "note": "银行短信主模板：尾号xxxx（可选卡种/账户）… 收支动词（可选小括号备注）… 金额 元 [，余额 Y 元]。日期段刻意用惰性通配而非固定格式，银行改日期写法时仍能命中。备注必须由小括号界定：否则无括号的「支出88.00元」会被备注组吞掉金额，解析出金额 0 后被拒收。",
+      "senders": ["*"],
+      "packages": [],
+      "regex": "尾号(\\d{4})的[^0-9]{0,6}.{0,20}?(支出|收入|消费|存入|转入|转出|扣款|入账|退款|退货|代扣)(?:\\(([^()]{0,12})\\))?(?:人民币)?([\\d,]+(?:\\.\\d{1,2})?)元(?:.*?余额([\\d,]+(?:\\.\\d{1,2})?)元)?",
+      "extract": {
+        "accountTailGroup": "1",
+        "directionGroup": "2",
+        "memoGroup": "3",
+        "amountGroup": "4",
+        "balanceGroup": "5"
+      },
+      "channel": "",
+      "confidence": 0.95
+    },
+    {
+      "id": "bank-account-flow",
+      "note": "银行短信次模板：不写「尾号」而写「账户xxxx于…」，覆盖招商银行等写法。备注同样必须由小括号界定。",
+      "senders": ["*"],
+      "packages": [],
+      "regex": "账户(\\d{4})于.{0,16}?(支出|收入|消费|存入|转入|转出|扣款|入账|退款|退货|代扣)(?:\\(([^()]{0,12})\\))?(?:人民币)?([\\d,]+(?:\\.\\d{1,2})?)元(?:.*?余额([\\d,]+(?:\\.\\d{1,2})?)元)?",
+      "extract": {
+        "accountTailGroup": "1",
+        "directionGroup": "2",
+        "memoGroup": "3",
+        "amountGroup": "4",
+        "balanceGroup": "5"
+      },
+      "channel": "",
+      "confidence": 0.95
+    },
+    {
+      "id": "wechat-pay-notif",
+      "note": "微信支付服务号通知：已支付¥12.00 / 支付成功 / 收款到账¥5.00。刻意不收「付款」这类裸词，避免把聊天内容当成流水。",
+      "senders": [],
+      "packages": ["com.tencent.mm"],
+      "regex": "(已支付|支付成功|付款成功|已付款|成功付款|收款到账|已收款|已收钱|退款到账|已退款)\\s*[¥￥]?([\\d,]+(?:\\.\\d{1,2})?)元?",
+      "extract": {
+        "directionGroup": "1",
+        "amountGroup": "2"
+      },
+      "channel": "微信支付",
+      "confidence": 0.93
+    },
+    {
+      "id": "alipay-notif",
+      "note": "支付宝通知：支付成功 12.00元 / 你已成功付款12.00元 / 收款到账12.00元。",
+      "senders": [],
+      "packages": ["com.eg.android.AlipayGphone"],
+      "regex": "(成功付款|付款成功|支付成功|已成功付款|收款到账|已收款|退款成功|已退款|转账成功)\\s*[¥￥]?([\\d,]+(?:\\.\\d{1,2})?)元?",
+      "extract": {
+        "directionGroup": "1",
+        "amountGroup": "2"
+      },
+      "channel": "支付宝",
+      "confidence": 0.93
+    },
+    {
+      "id": "unionpay-notif",
+      "note": "云闪付通知：消费/入账 + 金额。",
+      "senders": [],
+      "packages": ["com.unionpay", "com.unionpay.mobilepay"],
+      "regex": "(消费|支出|入账|收入|退款)\\s*(?:人民币)?[¥￥]?([\\d,]+(?:\\.\\d{1,2})?)元",
+      "extract": {
+        "directionGroup": "1",
+        "amountGroup": "2"
+      },
+      "channel": "云闪付",
+      "confidence": 0.9
+    }
+  ]
+}

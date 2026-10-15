@@ -1,0 +1,13 @@
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# 本地账本与设备令牌只留在电脑上
+server/data/
+
+# Android 构建产物与本机 SDK 路径
+android/.gradle/
+android/**/build/
+android/local.properties
+android/*.keystore
+android/keystore.properties

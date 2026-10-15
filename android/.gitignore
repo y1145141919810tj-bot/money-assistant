@@ -1,0 +1,12 @@
+.gradle/
+build/
+local.properties
+keystore.properties
+*.keystore
+.kotlin/
+.idea/
+*.iml
+captures/
+
+# 由 syncTemplates 从 ../../templates/templates.json 生成，不要手改。
+app/src/main/assets/templates.json

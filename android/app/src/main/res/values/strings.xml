@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">零钱管家</string>
+    <string name="listener_label">零钱管家 · 收支捕获</string>
+
+    <string name="section_health">采集状态</string>
+    <string name="status_unknown">检测中…</string>
+    <string name="status_notif_on">通知使用权：已授权</string>
+    <string name="status_notif_off">通知使用权：未授权（后台捕获不可用）</string>
+    <string name="status_sms_on">短信权限：已授权</string>
+    <string name="status_sms_off">短信权限：未授权（银行卡流水不可用）</string>
+    <string name="status_counts">已捕获 %1$d 笔 · 未识别 %2$d 条</string>
+
+    <string name="action_notif_settings">授权通知使用权</string>
+    <string name="action_sms_permission">授权短信权限</string>
+    <string name="action_backfill">回补最近 7 天短信</string>
+    <string name="action_filter_all">全部流水</string>
+    <string name="action_filter_unmatched">未识别</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_report">本月账单</string>
+    <string name="action_server">连接电脑</string>
+    <string name="action_save">保存</string>
+    <string name="action_cancel">取消</string>
+    <string name="hint_server_url">电脑地址，如 http://192.168.1.20:8787</string>
+    <string name="hint_server_token">设备令牌</string>
+    <string name="server_dialog_title">连接家里的电脑</string>
+    <string name="toast_server_saved">已保存。打开「本月账单」会上传并拉取月报</string>
+
+    <string name="action_prev_month">上个月</string>
+    <string name="action_next_month">下个月</string>
+    <string name="action_reload_report">刷新</string>
+    <string name="report_loading">正在上传并读取月报…</string>
+    <string name="report_synced">已与电脑同步，本次上传 %1$d 条</string>
+    <string name="report_not_configured">还没有连接电脑。请先点「连接电脑」，填入地址和令牌。</string>
+    <string name="report_failed">连不上电脑：%1$s</string>
+    <string name="report_expense">支出  %1$s</string>
+    <string name="report_income">收入  %1$s</string>
+    <string name="report_refund">退款  %1$s</string>
+    <string name="report_category_title">分类</string>
+    <string name="report_trend_title">趋势</string>
+    <string name="report_recent_title">本月流水</string>
+    <string name="report_empty">暂无</string>
+    <string name="report_unknown_channel">未知渠道</string>
+
+    <string name="filter_all_title">最近流水</string>
+    <string name="filter_unmatched_title">未识别条目（补模板用）</string>
+    <string name="empty_hint">还没有捕获到任何收支。\n\n请先授权通知使用权与短信权限，然后用支付宝/微信支付一笔小额，或点「回补最近 7 天短信」。</string>
+
+    <string name="health_title">来源健康度</string>
+    <string name="health_empty">暂无来源记录</string>
+
+    <string name="toast_sms_granted">短信权限已授权，可点「回补最近 7 天短信」验证模板</string>
+    <string name="toast_sms_denied">未获得短信权限</string>
+    <string name="toast_backfill_start">正在回补…</string>
+    <string name="toast_backfill_done">回补完成：新增 %1$d 笔，未识别 %2$d 条</string>
+
+    <string name="direction_expense">支出</string>
+    <string name="direction_income">收入</string>
+    <string name="direction_refund">退款</string>
+    <string name="direction_transfer">转账</string>
+    <string name="direction_unknown">未知</string>
+</resources>

@@ -1,0 +1,14 @@
+{
+  "name": "pocketledger-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "零钱管家云端账本：入库、去重合并、对账、预算与播报。零运行时依赖，仅用 Node 内置能力。",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node src/http/server.js",
+    "test": "node --test --disable-warning=ExperimentalWarning"
+  }
+}

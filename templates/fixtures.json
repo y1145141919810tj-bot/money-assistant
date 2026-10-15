@@ -1,0 +1,249 @@
+{
+  "version": 1,
+  "note": "设备端(Kotlin)与云端(Node)共用的解析验收语料。两个实现必须对同一份 case 得出相同结论，任何一边失配即失败——这是防止两处解析器漂移的唯一手段。字段缺省表示不校验该字段。",
+  "cases": [
+    {
+      "id": "icbc-expense",
+      "source": "sms",
+      "origin": "95588",
+      "text": "【工商银行】您尾号1234的储蓄卡账户8月5日12:30支出(消费)人民币100.00元，余额1234.56元。",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "parsed",
+        "kind": "expense",
+        "amountCents": 10000,
+        "balanceCents": 123456,
+        "accountTail": "1234",
+        "channel": "工商银行",
+        "templateId": "bank-tail-flow"
+      }
+    },
+    {
+      "id": "ccb-expense-chinese-time",
+      "source": "sms",
+      "origin": "95533",
+      "text": "【建设银行】您尾号1234的储蓄卡账户8月5日12时30分快捷支付支出(消费)人民币100.00元，余额1234.56元。",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "parsed",
+        "kind": "expense",
+        "amountCents": 10000,
+        "channel": "建设银行"
+      }
+    },
+    {
+      "id": "cmb-account-expense",
+      "source": "sms",
+      "origin": "95555",
+      "text": "【招商银行】您账户1234于8月5日12:30支出人民币100.00元，余额1234.56元。",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "parsed",
+        "kind": "expense",
+        "amountCents": 10000,
+        "accountTail": "1234",
+        "channel": "招商银行",
+        "templateId": "bank-account-flow"
+      }
+    },
+    {
+      "id": "income-salary",
+      "source": "sms",
+      "origin": "95588",
+      "text": "【工商银行】您尾号1234的储蓄卡账户8月5日12:30收入(工资)人民币1000.00元，余额2234.56元。",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "parsed",
+        "kind": "income",
+        "amountCents": 100000,
+        "memo": "工资"
+      }
+    },
+    {
+      "id": "refund",
+      "source": "sms",
+      "origin": "95588",
+      "text": "您尾号1234的储蓄卡账户8月5日12:30退款(退货)人民币100.00元。",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "parsed",
+        "kind": "refund",
+        "amountCents": 10000
+      }
+    },
+    {
+      "id": "fullwidth-and-thousands",
+      "source": "sms",
+      "origin": "95588",
+      "text": "您尾号1234的储蓄卡账户8月5日12:30支出（消费）人民币1,234.56元",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "parsed",
+        "kind": "expense",
+        "amountCents": 123456
+      }
+    },
+    {
+      "id": "no-paren-amount-not-swallowed",
+      "source": "sms",
+      "origin": "95588",
+      "text": "您尾号1234的储蓄卡账户8月5日12:30支出88.00元",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "parsed",
+        "kind": "expense",
+        "amountCents": 8800
+      }
+    },
+    {
+      "id": "multi-verb-no-paren",
+      "source": "sms",
+      "origin": "95555",
+      "text": "您账户1234于8月5日12:30消费支出人民币66.50元",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "parsed",
+        "kind": "expense",
+        "amountCents": 6650
+      }
+    },
+    {
+      "id": "unknown-bank-sender",
+      "source": "sms",
+      "origin": "1069000012345",
+      "text": "您尾号9999的账户支出88.00元",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "parsed",
+        "kind": "expense",
+        "amountCents": 8800,
+        "channel": "银行"
+      }
+    },
+    {
+      "id": "personal-sms-dropped",
+      "source": "sms",
+      "origin": "13800138000",
+      "text": "我转给你100.00元",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "not_flow",
+        "amountCents": null
+      }
+    },
+    {
+      "id": "spoofed-personal-sms-dropped",
+      "source": "sms",
+      "origin": "13800138000",
+      "text": "尾号1234的账户支出100.00元",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "not_flow",
+        "amountCents": null
+      }
+    },
+    {
+      "id": "otp-rejected",
+      "source": "sms",
+      "origin": "95588",
+      "text": "【工商银行】您尾号1234的储蓄卡账户8月5日12:30支出(消费)人民币100.00元，验证码123456，请勿泄露。",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "rejected",
+        "amountCents": null
+      }
+    },
+    {
+      "id": "wechat-pay-notif",
+      "source": "notif",
+      "origin": "com.tencent.mm",
+      "title": "微信支付",
+      "text": "已支付¥12.00",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "parsed",
+        "kind": "expense",
+        "amountCents": 1200,
+        "channel": "微信支付",
+        "templateId": "wechat-pay-notif"
+      }
+    },
+    {
+      "id": "wechat-clone-package",
+      "source": "notif",
+      "origin": "com.tencent.mm.chat",
+      "title": "微信支付",
+      "text": "已支付¥12.00",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "parsed",
+        "amountCents": 1200
+      }
+    },
+    {
+      "id": "wechat-chat-not-flow",
+      "source": "notif",
+      "origin": "com.tencent.mm",
+      "title": "张三",
+      "text": "晚上一起吃饭吗",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "not_flow",
+        "amountCents": null
+      }
+    },
+    {
+      "id": "alipay-notif",
+      "source": "notif",
+      "origin": "com.eg.android.AlipayGphone",
+      "title": "支付宝",
+      "text": "支付成功 12.00元",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "parsed",
+        "kind": "expense",
+        "amountCents": 1200,
+        "channel": "支付宝",
+        "templateId": "alipay-notif"
+      }
+    },
+    {
+      "id": "unionpay-notif",
+      "source": "notif",
+      "origin": "com.unionpay",
+      "title": "云闪付",
+      "text": "消费 45.00元",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "parsed",
+        "kind": "expense",
+        "amountCents": 4500,
+        "channel": "云闪付"
+      }
+    },
+    {
+      "id": "bank-app-notification-unmatched",
+      "source": "notif",
+      "origin": "com.icbc",
+      "title": "工商银行",
+      "text": "您尾号1234的账户支出100.00元",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "unmatched",
+        "amountCents": null
+      }
+    },
+    {
+      "id": "unrelated-app-not-flow",
+      "source": "notif",
+      "origin": "com.example.shopping",
+      "title": "促销",
+      "text": "满100.00元减20元，立即支付",
+      "postedAt": 1785904200000,
+      "expect": {
+        "status": "not_flow",
+        "amountCents": null
+      }
+    }
+  ]
+}
